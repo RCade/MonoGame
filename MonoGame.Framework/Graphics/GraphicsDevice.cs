@@ -68,6 +68,7 @@ using RenderbufferStorage = OpenTK.Graphics.ES20.All;
 #endif
 #elif DIRECTX
 using SharpDX;
+using SharpDX.DXGI;
 using SharpDX.Direct3D;
 #if WINDOWS_PHONE
 using SharpDX.Direct3D11;
@@ -547,7 +548,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
 #if WINDOWS_PHONE
 
-        internal void UpdateDevice(Device device, DeviceContext context)
+        internal void UpdateDevice(SharpDX.Direct3D11.Device device, DeviceContext context)
         {
             // TODO: Lost device logic!
 
@@ -1676,7 +1677,7 @@ namespace Microsoft.Xna.Framework.Graphics
 
                 // Use the depth from the first target.
                 var renderTarget = (IRenderTarget)_currentRenderTargetBindings[0].RenderTarget;
-                _currentDepthStencilView = renderTarget.GetDepthStencilView();
+                if ( renderTarget != null ) _currentDepthStencilView = renderTarget.GetDepthStencilView(); //TODO: Getting startup crashes here because of null RT
 
                 // Set the targets.
                 lock (_d3dContext)

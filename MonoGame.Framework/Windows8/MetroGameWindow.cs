@@ -207,8 +207,8 @@ namespace Microsoft.Xna.Framework
             
             var newWidth = (int)((_backBufferScale.X * _clientBounds.Width) + 0.5f);
             var newHeight = (int)((_backBufferScale.Y * _clientBounds.Height) + 0.5f);
-            manager.PreferredBackBufferWidth = newWidth;
-            manager.PreferredBackBufferHeight = newHeight;
+            manager.PreferredBackBufferWidth = (int) args.Size.Width; // newWidth;
+            manager.PreferredBackBufferHeight = (int) args.Size.Height; // newHeight;
 
             manager.GraphicsDevice.Viewport = new Viewport(0, 0, newWidth, newHeight);            
 
