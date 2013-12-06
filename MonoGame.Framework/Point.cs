@@ -45,7 +45,7 @@ namespace Microsoft.Xna.Framework
 
         [DataMember]
         public int Y;
-
+      
         #endregion Public Fields
 
         #region Properties
@@ -64,7 +64,7 @@ namespace Microsoft.Xna.Framework
             this.X = x;
             this.Y = y;
         }
-
+        
         #endregion Constructors
 
         #region Operators
