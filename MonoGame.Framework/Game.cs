@@ -79,7 +79,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 #endif
-
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
@@ -235,11 +235,16 @@ namespace Microsoft.Xna.Framework
                     ContentTypeReaderManager.ClearTypeCreators();
 
 #if WINDOWS_PHONE
-                    TouchPanel.ResetState();
-                    Microsoft.Xna.Framework.Audio.SoundEffect.Shutdown();
+                    TouchPanel.ResetState();                    
+#endif
+
+#if WINDOWS_MEDIA_SESSION
+                    Media.MediaManagerState.CheckShutdown();
 #endif
 
 #if DIRECTX
+                    SoundEffect.Shutdown();
+
                     BlendState.ResetStates();
                     DepthStencilState.ResetStates();
                     RasterizerState.ResetStates();
@@ -653,9 +658,6 @@ namespace Microsoft.Xna.Framework
         private void Components_ComponentAdded(
             object sender, GameComponentCollectionEventArgs e)
         {
-            // Since we only subscribe to ComponentAdded after the graphics
-            // devices are set up, it is safe to just blindly call Initialize.
-            e.GameComponent.Initialize();
             CategorizeComponent(e.GameComponent);
         }
 
@@ -739,6 +741,10 @@ namespace Microsoft.Xna.Framework
 			OnExiting(this, EventArgs.Empty);
 			UnloadContent();
 
+#if DIRECTX
+		    SoundEffect.Shutdown();
+#endif
+
 #if WINDOWS_MEDIA_SESSION
             Media.MediaManagerState.CheckShutdown();
 #endif
@@ -774,8 +780,6 @@ namespace Microsoft.Xna.Framework
         // NOTE: InitializeExistingComponents really should only be called once.
         //       Game.Initialize is the only method in a position to guarantee
         //       that no component will get a duplicate Initialize call.
-        //       Further calls to Initialize occur immediately in response to
-        //       Components.ComponentAdded.
         private void InitializeExistingComponents()
         {
             // TODO: Would be nice to get rid of this copy, but since it only
